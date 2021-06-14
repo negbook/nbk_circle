@@ -44,10 +44,10 @@ function GetMinimapAnchor()
     local xscale = 1.0 / res_x
     local yscale = 1.0 / res_y
     local Minimap = {}
-    Minimap.width = xscale * (res_x / (3.9 * aspect_ratio))
-    Minimap.height = yscale * (res_y / 6.0) *1.33
+    Minimap.width = xscale * (res_x / (3.7 * aspect_ratio))
+    Minimap.height = yscale * (res_y / 5.8) *1.33
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
-    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(-0.0045+0.002, (0.002 + (-0.188888)+0.002)*1.33)
+    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(-0.0045, (0.002 + (-0.188888))*1.33)
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
     Minimap.bottom_y = 1.0 - yscale * (res_y * (safezone_y * ((math.abs(safezone - 1.0)) * 10)))
