@@ -4,13 +4,13 @@ minimap_mask={posX=0.020		,posY=0.032 	 	,sizeX=0.111		,sizeY=0.159}
 minimap_blur={posX=-0.03		,posY=0.022		,sizeX=0.266		,sizeY=0.237}
 
 CreateThread(function()
-    RequestStreamedTextureDict("circlemap", false)
-	while not HasStreamedTextureDictLoaded("circlemap") do
+    RequestStreamedTextureDict("nbk_circlemap_full", false)
+	while not HasStreamedTextureDictLoaded("nbk_circlemap_full") do
 		Wait(100)
 	end
-
-	AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "circlemap", "radarmasksm")
-
+    
+	AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "nbk_circlemap_full", "radarmasksm_circle_noblur")
+                                                                                            --radarmasksm,radarmasksm_circle_blur,radarmasksm_circle_noblur
 	SetMinimapClipType(1)
 	SetMinimapComponentPosition('minimap', 'L', 'B', minimap.posX, minimap.posY, minimap.sizeX, minimap.sizeY*1.33)
 	SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX, minimap_mask.posY, minimap_mask.sizeX, minimap_mask.sizeY*1.33)
@@ -32,7 +32,7 @@ CreateThread(function()
         end
 
 end)
---[[
+
 function GetMinimapAnchor()
     -- Safezone goes from 1.0 (no gap) to 0.9 (5% gap (1/20))
     -- 0.05 * ((safezone - 0.9) * 10)
@@ -44,10 +44,10 @@ function GetMinimapAnchor()
     local xscale = 1.0 / res_x
     local yscale = 1.0 / res_y
     local Minimap = {}
-    Minimap.width = xscale * (res_x / (4 * aspect_ratio))
-    Minimap.height = yscale * (res_y / 6.2) *1.33
+    Minimap.width = xscale * (res_x / (3.9 * aspect_ratio))
+    Minimap.height = yscale * (res_y / 6.0) *1.33
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
-    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(-0.0045+0.004, (0.002 + (-0.188888)+0.008)*1.33)
+    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(-0.0045+0.002, (0.002 + (-0.188888)+0.002)*1.33)
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
     Minimap.bottom_y = 1.0 - yscale * (res_y * (safezone_y * ((math.abs(safezone - 1.0)) * 10)))
@@ -75,4 +75,3 @@ Citizen.CreateThread(function()
 end)
 
 
-]]--
