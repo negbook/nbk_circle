@@ -23,12 +23,12 @@ CreateThread(function()
     Wait(32)
     SetRadarBigmapEnabled(false, false)
     Wait(32)
-    CreateThread(function()
+
         while true do
             Wait(0)
             BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
             ScaleformMovieMethodAddParamInt(3)
             EndScaleformMovieMethod()
         end
-    end)
+
 end)
