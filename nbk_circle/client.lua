@@ -47,7 +47,7 @@ function GetMinimapAnchor() --https://forum.cfx.re/t/release-utility-minimap-anc
     local xscale = 1.0 / res_x
     local yscale = 1.0 / res_y
     local Minimap = {}
-    Minimap.width = xscale * (res_x / (3.7 * aspect_ratio))
+    Minimap.width = xscale * (res_x / (3.8 * aspect_ratio))
     Minimap.height = yscale * (res_y / 5.8) *1.33
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
     Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX, (minimap_main.posY + (-minimap_main.sizeY))*1.33)
@@ -71,10 +71,11 @@ RegisterNetEvent("nbk_circle:GetHudDimensionsByMinimapAnchor")
 AddEventHandler('nbk_circle:GetHudDimensionsByMinimapAnchor', function(inputWidth,inputHeight,cb)
     local mui = GetMinimapAnchor()
     local Hud = {}
+    
     Hud.width = inputWidth/(191/mui.width)
     Hud.height = inputHeight/(136/mui.height)
-    Hud.x = mui.x-(((inputWidth/(191/mui.width))-mui.width)/2) + Hud.width/2
-    Hud.y = mui.y-(((inputHeight/(136/mui.height))-mui.height)/2) + Hud.height/2
+    Hud.x = mui.x-((Hud.width-mui.width)/2) + Hud.width/2
+    Hud.y = mui.y-((Hud.height-mui.height)/2) + Hud.height/2
     cb(Hud)
 end)
 
