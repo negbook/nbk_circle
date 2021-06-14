@@ -1,7 +1,7 @@
 --frontend.xml
-minimap={posX=-0.0045		,posY=0.002		,sizeX=0.150		,sizeY=0.188888}
-minimap_mask={posX=0.020		,posY=0.032 	 	,sizeX=0.111		,sizeY=0.159}
-minimap_blur={posX=-0.03		,posY=0.022		,sizeX=0.266		,sizeY=0.237}
+local minimap_main={posX=-0.0045		,posY=0.002		,sizeX=0.150		,sizeY=0.188888}
+local minimap_mask={posX=0.020		,posY=0.032 	 	,sizeX=0.111		,sizeY=0.159}
+local minimap_blur={posX=-0.03		,posY=0.022		,sizeX=0.266		,sizeY=0.237}
 
 CreateThread(function()
     RequestStreamedTextureDict("nbk_circlemap_full", false)
@@ -9,10 +9,10 @@ CreateThread(function()
 		Wait(100)
 	end
     
-	AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "nbk_circlemap_full", "radarmasksm_circle_noblur")
+	AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "nbk_circlemap_full", "radarmasksm_circle_blur")
                                                                                             --radarmasksm,radarmasksm_circle_blur,radarmasksm_circle_noblur
 	SetMinimapClipType(1)
-	SetMinimapComponentPosition('minimap', 'L', 'B', minimap.posX, minimap.posY, minimap.sizeX, minimap.sizeY*1.33)
+	SetMinimapComponentPosition('minimap', 'L', 'B', minimap_main.posX, minimap_main.posY, minimap_main.sizeX, minimap_main.sizeY*1.33)
 	SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX, minimap_mask.posY, minimap_mask.sizeX, minimap_mask.sizeY*1.33)
     SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX, minimap_blur.posY, minimap_blur.sizeX, minimap_blur.sizeY*1.33)
 
@@ -47,7 +47,7 @@ function GetMinimapAnchor()
     Minimap.width = xscale * (res_x / (3.7 * aspect_ratio))
     Minimap.height = yscale * (res_y / 5.8) *1.33
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
-    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(-0.0045, (0.002 + (-0.188888))*1.33)
+    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX, (minimap_main.posY + (-minimap_main.sizeY))*1.33)
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
     Minimap.bottom_y = 1.0 - yscale * (res_y * (safezone_y * ((math.abs(safezone - 1.0)) * 10)))
@@ -59,6 +59,7 @@ function GetMinimapAnchor()
     Minimap.yunit = yscale
     return Minimap
 end
+--[[
 function drawRct(x, y, width, height, r, g, b, a)
     DrawRect(x + width/2, y + height/2, width, height, r, g, b, a)
 end
@@ -73,5 +74,5 @@ Citizen.CreateThread(function()
         drawRct(ui.x + ui.width, ui.y, -thickness * ui.xunit, ui.height, 0, 0, 0, 255)
     end
 end)
-
+]]--
 
