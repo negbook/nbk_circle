@@ -5,4 +5,3 @@ author "negbook"
 
 client_script 'client.lua'
 
-export 'GetMinimapAnchor'

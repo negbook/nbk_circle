@@ -36,7 +36,7 @@ CreateThread(function()
 
 end)
 
-function GetMinimapAnchor()
+function GetMinimapAnchor() --https://forum.cfx.re/t/release-utility-minimap-anchor-script/81912
     -- Safezone goes from 1.0 (no gap) to 0.9 (5% gap (1/20))
     -- 0.05 * ((safezone - 0.9) * 10)
     local safezone = GetSafeZoneSize()
@@ -62,6 +62,22 @@ function GetMinimapAnchor()
     Minimap.yunit = yscale
     return Minimap
 end
+
+exports('GetMinimapAnchor', function()
+  return GetMinimapAnchor()
+end)
+
+RegisterNetEvent("nbk_circle:GetHudDimensionsByMinimapAnchor")
+AddEventHandler('nbk_circle:GetHudDimensionsByMinimapAnchor', function(inputWidth,inputHeight,cb)
+    local mui = GetMinimapAnchor()
+    local Hud = {}
+    Hud.width = inputWidth/(191/mui.width)
+    Hud.height = inputHeight/(136/mui.height)
+    Hud.x = mui.x-(((inputWidth/(191/mui.width))-mui.width)/2) + Hud.width/2
+    Hud.y = mui.y-(((inputHeight/(136/mui.height))-mui.height)/2) + Hud.height/2
+    cb(Hud)
+end)
+
 --[[
 function drawRct(x, y, width, height, r, g, b, a)
     DrawRect(x + width/2, y + height/2, width, height, r, g, b, a)
