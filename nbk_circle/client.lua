@@ -26,6 +26,9 @@ CreateThread(function()
 
         while true do
             Wait(0)
+            
+            BeginScaleformMovieMethod(minimap, "HIDE_SATNAV")
+            EndScaleformMovieMethod()
             BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
             ScaleformMovieMethodAddParamInt(3)
             EndScaleformMovieMethod()
