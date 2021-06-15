@@ -1,3 +1,6 @@
+--negbook 24*30 hours made it 
+
+
 --frontend.xml
 local minimap_main={posX=-0.0045		,posY=0.002		,sizeX=0.150		,sizeY=0.188888}
 local minimap_mask={posX=0.020		,posY=0.032 	 	,sizeX=0.111		,sizeY=0.159}
@@ -86,6 +89,7 @@ local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/
     offsety = offsety or 0.0
     k1 = k1 or 3.75
     k2 = k2 or 5.8
+    --negbook 24*3 hours made it 
     local safezone = GetSafeZoneSize()
     local safezone_x = 1.0 / 20.0
     local safezone_y = 1.0 / 20.0
@@ -100,7 +104,7 @@ local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/
     --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
     --https://cookbook.fivem.net/2019/08/12/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/
     Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), ((minimap_main.posY) + (-minimap_main.sizeY)* (isCircleMode and 1.33 or 1.00)) )
-    
+    --negbook 24*3 hours made it 
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
     Minimap.bottom_y = 1.0 - yscale * (res_y * (safezone_y * ((math.abs(safezone - 1.0)) * 10)))
