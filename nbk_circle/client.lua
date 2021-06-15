@@ -79,6 +79,7 @@ local function InitNormal()
     end)
 end 
 local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/release-utility-minimap-anchor-script/81912
+--MINIMAP ANCHOR BY GLITCHDETECTOR (Feb 16 2018 version)
     -- Safezone goes from 1.0 (no gap) to 0.9 (5% gap (1/20))
     -- 0.05 * ((safezone - 0.9) * 10)
     offsetx = offsetx or 0.0 
@@ -95,7 +96,9 @@ local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/
     local Minimap = {}
     Minimap.width = xscale * (res_x / (k1 * aspect_ratio))
     Minimap.height = yscale * (res_y / k2) * (isCircleMode and 1.33 or 1.00)
-    SetScriptGfxAlign(string.byte('L'), string.byte('B')) --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
+    SetScriptGfxAlign(string.byte('L'), string.byte('B')) 
+    --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
+    --https://cookbook.fivem.net/2019/08/12/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/
     Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), ((minimap_main.posY) + (-minimap_main.sizeY)* (isCircleMode and 1.33 or 1.00)) )
     
     ResetScriptGfxAlign()
