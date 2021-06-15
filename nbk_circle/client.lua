@@ -14,7 +14,7 @@ local minimap = nil
 CreateThread(function()
     while true do 
         Wait(0)
-        if isCircleReady then 
+        if isCircleReady and not IsPauseMenuActive() then 
             minimap = RequestScaleformMovie("minimap")
             Wait(32)
             SetRadarBigmapEnabled(true, false)
@@ -29,7 +29,7 @@ end)
 CreateThread(function()
     while true do
         Wait(0)
-        if isCircleInited then 
+        if isCircleInited and not IsPauseMenuActive() then 
         BeginScaleformMovieMethod(minimap, "HIDE_SATNAV")
         EndScaleformMovieMethod()
         BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
