@@ -103,7 +103,7 @@ local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) 
     --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
     --https://cookbook.fivem.net/2019/08/12/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/
-    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), ((minimap_main.posY) + (-minimap_main.sizeY)* (isCircleMode and 1.33 or 1.00)) )
+    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), (offsety + (minimap_main.posY) + ((-minimap_main.sizeY)* (isCircleMode and 1.33 or 1.00))) )
     --negbook 24*3 hours made it 
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
