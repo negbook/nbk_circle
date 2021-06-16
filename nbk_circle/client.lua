@@ -1,5 +1,6 @@
 --negbook 24*30 hours made it 
-
+local minimap_main_pixel_width = 191- 10
+local minimap_main_pixel_height = 136 - 10
 
 --frontend.xml
 local minimap_main={posX=-0.0045		,posY=0.002		,sizeX=0.150		,sizeY=0.188888}
@@ -54,9 +55,9 @@ local function InitCircle(offsetx,offsety,noblur)
                                                                                                 --radarmasksm,radarmasksm_circle_blur,radarmasksm_circle_noblur
         SetMinimapClipType(1)
       
-        SetMinimapComponentPosition('minimap', 'L', 'B', minimap_main.posX        + offsetx  , minimap_main.posY   +offsety, minimap_main.sizeX, minimap_main.sizeY*1.33)
-        SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX   + offsetx, minimap_mask.posY     +offsety, minimap_mask.sizeX, minimap_mask.sizeY*1.33)
-        SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX   + offsetx, minimap_blur.posY     +offsety, minimap_blur.sizeX, minimap_blur.sizeY*1.33)
+        SetMinimapComponentPosition('minimap', 'L', 'B', minimap_main.posX        + offsetx  , minimap_main.posY   +offsety, minimap_main.sizeX, minimap_main.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
+        SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX   + offsetx, minimap_mask.posY     +offsety, minimap_mask.sizeX, minimap_mask.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
+        SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX   + offsetx, minimap_blur.posY     +offsety, minimap_blur.sizeX, minimap_blur.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
         isCircleReady = true 
         return 
     end)
@@ -99,11 +100,11 @@ local function GetMinimapAnchor(offsetx,offsety,k1,k2) --https://forum.cfx.re/t/
     local yscale = 1.0 / res_y
     local Minimap = {}
     Minimap.width = xscale * (res_x / (k1 * aspect_ratio))
-    Minimap.height = yscale * (res_y / k2) * (isCircleMode and 1.33 or 1.00)
+    Minimap.height = yscale * (res_y / k2) * (isCircleMode and (minimap_main_pixel_width/minimap_main_pixel_height) or 1.00)
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) 
     --https://forum.cfx.re/t/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/712843
     --https://cookbook.fivem.net/2019/08/12/useful-snippet-getting-the-top-left-of-the-minimap-in-screen-coordinates/
-    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), (offsety + (minimap_main.posY) + ((-minimap_main.sizeY)* (isCircleMode and 1.33 or 1.00))) )
+    Minimap.left_x, Minimap.top_y = GetScriptGfxPosition(minimap_main.posX+offsetx*(Minimap.width/minimap_main.sizeX), (offsety + (minimap_main.posY) + ((-minimap_main.sizeY)* (isCircleMode and (minimap_main_pixel_width/minimap_main_pixel_height) or 1.00))) )
     --negbook 24*3 hours made it 
     ResetScriptGfxAlign()
     --Minimap.left_x = xscale * (res_x * (safezone_x * ((math.abs(safezone - 1.0)) * 10)))
@@ -125,8 +126,8 @@ function GetHudDimensionsByMinimapAnchor(inputWidth,inputHeight,offsetx,offsety,
     local mui = GetMinimapAnchor(offsetx,offsety,k1,k2)
     local Hud = {}
     
-    Hud.width = inputWidth/(181/mui.width)
-    Hud.height = inputHeight/(126/mui.height)
+    Hud.width = inputWidth/((minimap_main_pixel_width)/mui.width)
+    Hud.height = inputHeight/((minimap_main_pixel_height)/mui.height)
     Hud.x = mui.x-((Hud.width-mui.width)/2) + Hud.width/2
     Hud.y = mui.y-((Hud.height-mui.height)/2) + Hud.height/2
     return Hud
