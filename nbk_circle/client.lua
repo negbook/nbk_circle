@@ -18,6 +18,7 @@ CreateThread(function()
     while true do 
         Wait(0)
         if isCircleReady and not IsPauseMenuActive() then 
+            DisplayRadar(false)
             minimap = RequestScaleformMovie("minimap")
             Wait(32)
             SetRadarBigmapEnabled(true, false)
@@ -26,6 +27,7 @@ CreateThread(function()
             Wait(32)
             isCircleReady = false 
             isCircleInited = true 
+            DisplayRadar(true)
         end 
     end 
 end)
