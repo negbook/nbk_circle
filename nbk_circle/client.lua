@@ -11,43 +11,14 @@ local minimap_blur={posX=-0.03		,posY=0.022		,sizeX=0.266		,sizeY=0.237}
 local olddata,newdata = {},{}
 local isCircleMode = true 
 local isCircleReady = false 
-local isCircleInited = false 
-local minimap = nil 
 
-CreateThread(function()
-    while true do 
-        Wait(0)
-        if isCircleReady and not IsPauseMenuActive() then 
-            DisplayRadar(false)
-            minimap = RequestScaleformMovie("minimap")
-            Wait(32)
-            SetRadarBigmapEnabled(true, false)
-            Wait(32)
-            SetRadarBigmapEnabled(false, false)
-            Wait(32)
-            isCircleReady = false 
-            isCircleInited = true 
-            DisplayRadar(true)
-        end 
-    end 
-end)
-CreateThread(function()
-    while true do
-        Wait(0)
-        if isCircleInited and not IsPauseMenuActive() then 
-        BeginScaleformMovieMethod(minimap, "HIDE_SATNAV")
-        EndScaleformMovieMethod()
-        BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
-        ScaleformMovieMethodAddParamInt(3)
-        EndScaleformMovieMethod()
-        end 
-    end
-    isCircleInited = false 
-end)
+
+local MinimapData = {}
+
 local function InitCircle(offsetx,offsety,noblur,scale)
     offsetx = offsetx or 0.0 
     offsety = offsety or 0.0
-    isCircleReady = false
+
     isCircleMode = true 
     scale = scale or 1.0
     CreateThread(function()
@@ -64,11 +35,24 @@ local function InitCircle(offsetx,offsety,noblur,scale)
         SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX   + offsetx, minimap_mask.posY     +offsety, scale * minimap_mask.sizeX, scale * minimap_mask.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
         SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX   + offsetx, minimap_blur.posY     +offsety, scale * minimap_blur.sizeX, scale * minimap_blur.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
         isCircleReady = true 
+        
+        local minimap = RequestScaleformMovie("minimap")
+        SetRadarBigmapEnabled(true, false)
+        Wait(0)
+        SetRadarBigmapEnabled(false, false)
+
+        while isCircleReady do
+            Wait(0)
+            BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
+            ScaleformMovieMethodAddParamInt(3)
+            EndScaleformMovieMethod()
+        end
+            
         return 
     end)
 end 
 local function InitNormal()
-    isCircleReady = false
+
     isCircleMode = true 
     CreateThread(function()
         RequestStreamedTextureDict("nbk_radarmasksm_full", false)
@@ -82,9 +66,21 @@ local function InitNormal()
         SetMinimapComponentPosition('minimap', 'L', 'B', minimap_main.posX, minimap_main.posY, minimap_main.sizeX, minimap_main.sizeY)
         SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX, minimap_mask.posY, minimap_mask.sizeX, minimap_mask.sizeY)
         SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX, minimap_blur.posY, minimap_blur.sizeX, minimap_blur.sizeY)
-
         isCircleReady = true 
-        return
+        
+            local minimap = RequestScaleformMovie("minimap")
+            SetRadarBigmapEnabled(true, false)
+            Wait(0)
+            SetRadarBigmapEnabled(false, false)
+
+            while isCircleReady do
+                Wait(0)
+                BeginScaleformMovieMethod(minimap, "SETUP_HEALTH_ARMOUR")
+                ScaleformMovieMethodAddParamInt(3)
+                EndScaleformMovieMethod()
+            end
+            return 
+        
     end)
 end 
 local function GetMinimapAnchor(offsetx,offsety,scale) --https://forum.cfx.re/t/release-utility-minimap-anchor-script/81912
@@ -105,6 +101,7 @@ local function GetMinimapAnchor(offsetx,offsety,scale) --https://forum.cfx.re/t/
     local Minimap = {}
     k1 = scale == 1.0 and 3.75 or 3.75 - scale * minimap_main.sizeX
     k2 = scale == 1.0 and 5.8 or 5.8 + scale * minimap_main.sizeY
+    
     Minimap.width = scale * xscale * (res_x / (k1 * aspect_ratio))
     Minimap.height = scale * yscale * (res_y / k2) * (isCircleMode and (minimap_main_pixel_width/minimap_main_pixel_height) or 1.00)
     SetScriptGfxAlign(string.byte('L'), string.byte('B')) 
@@ -141,7 +138,10 @@ RegisterNetEvent("nbk_circle:RequestHudDimensionsFromMyUI")
 AddEventHandler('nbk_circle:RequestHudDimensionsFromMyUI', function(inputWidth,inputHeight,cb,offsetx,offsety,noblur,scale)
     offsetx = offsetx or 0.0 
     offsety = offsety or 0.0
-    InitCircle(offsetx,offsety,noblur,scale)
+    MinimapData = {offsetx,offsety,noblur,scale}
+    isCircleReady = false 
+    Wait(1)
+    InitCircle(table.unpack(MinimapData))
     cb(GetHudDimensionsByMinimapAnchor(inputWidth,inputHeight,offsetx,offsety,scale))
 end)
 
@@ -149,7 +149,7 @@ local oldResolution1 = nil
 local oldResolution2 = nil 
 local oldAR = nil 
 local oldBigmapActive = nil 
-local oldMinimapRendering = nil 
+local oldMinimapRendering = nil
 function CheckChanges()
 	local ASR1,ASR2 = GetActiveScreenResolution()
     local AR = GetAspectRatio(0)
@@ -165,7 +165,9 @@ function CheckChanges()
         oldAR = nowAR
         oldBigmapActive = nowBigmapActive
         oldMinimapRendering = nowMinimapRendering
-		TriggerEvent('nbk_circle:OnMinimapRefresh',nowBigmapActive,nowMinimapRendering)
+        if MinimapData then InitCircle(table.unpack(MinimapData)) end 
+        Wait(1000) 
+        TriggerEvent('nbk_circle:OnMinimapRefresh')
     end 
 	if oldResolution1 ~= nowResolution1 then 
 		update()
@@ -173,9 +175,9 @@ function CheckChanges()
 		update()
     elseif oldAR ~= nowAR then 
 		update()
-    elseif oldBigmapActive ~= nowBigmapActive then 
+    elseif oldBigmapActive ~= nowBigmapActive and not nowBigmapActive then 
 		update()
-    elseif oldMinimapRendering ~= nowMinimapRendering then 
+    elseif oldMinimapRendering ~= nowMinimapRendering and nowMinimapRendering then 
 		update()
 	end 
 end
@@ -185,6 +187,7 @@ CreateThread(function()
         CheckChanges()
     end 
 end)
+
 
 --[[
 function drawRct(x, y, width, height, r, g, b, a)
