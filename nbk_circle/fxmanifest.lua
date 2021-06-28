@@ -3,5 +3,8 @@ games { 'gta5' }
 
 author "negbook"
 
-client_script 'client.lua'
+client_scripts 
+{
+ 'client.lua'
+ }
 

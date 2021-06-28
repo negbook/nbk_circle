@@ -133,7 +133,8 @@ function GetHudDimensionsByMinimapAnchor(inputWidth,inputHeight,offsetx,offsety,
     Hud.y = mui.y-((Hud.height-mui.height)/2) + Hud.height/2
     return Hud
 end 
-
+local LatestCB = nil 
+local LastestCBData = {}
 RegisterNetEvent("nbk_circle:RequestHudDimensionsFromMyUI")
 AddEventHandler('nbk_circle:RequestHudDimensionsFromMyUI', function(inputWidth,inputHeight,cb,offsetx,offsety,noblur,scale)
     offsetx = offsetx or 0.0 
@@ -142,7 +143,9 @@ AddEventHandler('nbk_circle:RequestHudDimensionsFromMyUI', function(inputWidth,i
     isCircleReady = false 
     Wait(1)
     InitCircle(table.unpack(MinimapData))
+    LatestCB = cb 
     cb(GetHudDimensionsByMinimapAnchor(inputWidth,inputHeight,offsetx,offsety,scale))
+    LastestCBData = {inputWidth,inputHeight,offsetx,offsety,scale}
 end)
 
 local oldResolution1 = nil 
@@ -168,6 +171,8 @@ function CheckChanges()
         if MinimapData then InitCircle(table.unpack(MinimapData)) end 
         Wait(1000) 
         TriggerEvent('nbk_circle:OnMinimapRefresh')
+        
+        if LatestCB then LatestCB(GetHudDimensionsByMinimapAnchor(table.unpack(LastestCBData))) end
     end 
 	if oldResolution1 ~= nowResolution1 then 
 		update()
