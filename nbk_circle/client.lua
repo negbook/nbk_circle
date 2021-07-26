@@ -160,8 +160,8 @@ function CheckChanges()
     local nowResolution2  = ASR2
     local nowAR  = AR
     
-    local nowBigmapActive  = IsBigmapActive()
-    local nowMinimapRendering  = IsMinimapRendering()
+    local nowBigmapActive  = IsBigmapActive()  and GetPauseMenuState() == 0  and  not IsPauseMenuActive()
+    local nowMinimapRendering  = IsMinimapRendering() and GetPauseMenuState() == 0  and  not IsPauseMenuActive()
     local update = function()
         oldResolution1 = nowResolution1
         oldResolution2 = nowResolution2
