@@ -169,6 +169,7 @@ function CheckChanges()
         
         if MinimapData then InitCircle(table.unpack(MinimapData)) end 
         TriggerEvent('nbk_circle:OnMinimapRefresh')
+        Wait(1000)
         if LatestCB then LatestCB(GetHudDimensionsByMinimapAnchor(table.unpack(LastestCBData))) end
         oldResolution1 = nowResolution1
         oldResolution2 = nowResolution2
