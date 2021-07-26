@@ -153,6 +153,7 @@ local oldResolution2 = nil
 local oldAR = nil 
 local oldBigmapActive = nil 
 local oldMinimapRendering = nil
+local oldMinimapRenderingEX = nil
 function CheckChanges()
 	local ASR1,ASR2 = GetActiveScreenResolution()
     local AR = GetAspectRatio(0)
@@ -160,29 +161,38 @@ function CheckChanges()
     local nowResolution2  = ASR2
     local nowAR  = AR
     
-    local nowBigmapActive  = IsBigmapActive()  and GetPauseMenuState() == 0  and  not IsPauseMenuActive()
-    local nowMinimapRendering  = IsMinimapRendering() and GetPauseMenuState() == 0  and  not IsPauseMenuActive()
+    local nowBigmapActive  = IsBigmapActive()  and not IsPauseMenuActive()
+    local nowMinimapRendering  = IsMinimapRendering()
+   
+    local nowMinimapRenderingEX  = IsMinimapRendering() and not IsPauseMenuActive()
     local update = function()
+        
+        if MinimapData then InitCircle(table.unpack(MinimapData)) end 
+        TriggerEvent('nbk_circle:OnMinimapRefresh')
+        if LatestCB then LatestCB(GetHudDimensionsByMinimapAnchor(table.unpack(LastestCBData))) end
         oldResolution1 = nowResolution1
         oldResolution2 = nowResolution2
         oldAR = nowAR
         oldBigmapActive = nowBigmapActive
         oldMinimapRendering = nowMinimapRendering
-        if MinimapData then InitCircle(table.unpack(MinimapData)) end 
-        Wait(1000) 
-        TriggerEvent('nbk_circle:OnMinimapRefresh')
-        
-        if LatestCB then LatestCB(GetHudDimensionsByMinimapAnchor(table.unpack(LastestCBData))) end
+        oldMinimapRenderingEX = nowMinimapRenderingEX
     end 
 	if oldResolution1 ~= nowResolution1 then 
 		update()
-	elseif oldResolution2 ~= nowResolution2 then 
+	end 
+    if oldResolution2 ~= nowResolution2 then 
 		update()
-    elseif oldAR ~= nowAR then 
+    end 
+    if oldAR ~= nowAR then 
 		update()
-    elseif oldBigmapActive ~= nowBigmapActive and not nowBigmapActive then 
+    end 
+    if oldBigmapActive ~= nowBigmapActive  then 
 		update()
-    elseif oldMinimapRendering ~= nowMinimapRendering and nowMinimapRendering then 
+    end 
+    if oldMinimapRendering ~= nowMinimapRendering  then 
+		update()
+    end 
+    if oldMinimapRenderingEX ~= nowMinimapRenderingEX  then 
 		update()
 	end 
 end
