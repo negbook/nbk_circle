@@ -11,7 +11,7 @@ local minimap_blur={posX=-0.03		,posY=0.022		,sizeX=0.266		,sizeY=0.237}
 local olddata,newdata = {},{}
 local isCircleMode = true 
 local isCircleReady = false 
-
+local minimap
 
 local MinimapData = {}
 
@@ -35,8 +35,9 @@ local function InitCircle(offsetx,offsety,noblur,scale)
         SetMinimapComponentPosition('minimap_mask', 'L', 'B', minimap_mask.posX   + offsetx, minimap_mask.posY     +offsety, scale * minimap_mask.sizeX, scale * minimap_mask.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
         SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX   + offsetx, minimap_blur.posY     +offsety, scale * minimap_blur.sizeX, scale * minimap_blur.sizeY*(minimap_main_pixel_width/minimap_main_pixel_height))
         isCircleReady = true 
-        
-        local minimap = RequestScaleformMovie("minimap")
+        if not HasScaleformMovieLoaded(minimap) then 
+			minimap = RequestScaleformMovie("minimap")
+		end 
         SetRadarBigmapEnabled(true, false)
         Wait(0)
         SetRadarBigmapEnabled(false, false)
@@ -68,7 +69,9 @@ local function InitNormal()
         SetMinimapComponentPosition('minimap_blur', 'L', 'B', minimap_blur.posX, minimap_blur.posY, minimap_blur.sizeX, minimap_blur.sizeY)
         isCircleReady = true 
         
-            local minimap = RequestScaleformMovie("minimap")
+            if not HasScaleformMovieLoaded(minimap) then 
+				minimap = RequestScaleformMovie("minimap")
+			end 
             SetRadarBigmapEnabled(true, false)
             Wait(0)
             SetRadarBigmapEnabled(false, false)
@@ -153,7 +156,7 @@ local oldResolution2 = nil
 local oldAR = nil 
 local oldBigmapActive = nil 
 local oldMinimapRendering = nil
-local oldMinimapRenderingEX = nil
+
 function CheckChanges()
 	local ASR1,ASR2 = GetActiveScreenResolution()
     local AR = GetAspectRatio(0)
@@ -162,9 +165,9 @@ function CheckChanges()
     local nowAR  = AR
     
     local nowBigmapActive  = IsBigmapActive()  and not IsPauseMenuActive()
-    local nowMinimapRendering  = IsMinimapRendering()
-   
-    local nowMinimapRenderingEX  = IsMinimapRendering() and not IsPauseMenuActive()
+    local nowMinimapRendering  = IsMinimapRendering() and not IsPauseMenuActive()
+    
+    
     local update = function()
         
         if MinimapData then InitCircle(table.unpack(MinimapData)) end 
@@ -193,9 +196,7 @@ function CheckChanges()
     if oldMinimapRendering ~= nowMinimapRendering  then 
 		update()
     end 
-    if oldMinimapRenderingEX ~= nowMinimapRenderingEX  then 
-		update()
-	end 
+
 end
 CreateThread(function()
     InitCircle()
